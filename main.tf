@@ -48,7 +48,6 @@ data "aws_ami" "worker_ami" {
 resource "aws_instance" "worker" {
   ami = data.aws_ami.worker_ami.id
   instance_type = "t4g.micro"
-  get_password_data = true
   subnet_id = module.aws_network.public_subnet_id
   security_groups = [module.aws_network.allow_ssh_sg_id]
   tags = {
