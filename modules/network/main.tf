@@ -66,9 +66,7 @@ resource "aws_security_group" "this" {
 
 resource "aws_vpc_security_group_egress_rule" "this" {
     security_group_id = aws_security_group.this.id
-    from_port = 0
-    to_port = 65535
-    ip_protocol = "-1"
+    ip_protocol = -1
     cidr_ipv4  = "0.0.0.0/0"
 }
 
