@@ -8,7 +8,7 @@ terraform {
   }
   backend "s3" {
     bucket = "test-anlorn-proxy-fun"
-    key="tfstate/"
+    key="tfstate"
     region="us-east-1"
   }
   required_version = "~> 1.0"
@@ -40,11 +40,11 @@ data "aws_ami" "worker_ami" {
   most_recent = true
   filter {
     name = "architecture"
-    values = ["arm64"]
+    values = ["x86_64"]
   }
   filter {
     name = "description"
-    values = ["Amazon Linux*202*AMI*HVM*"]
+    values = ["Amazon Linux*2023*AMI*HVM*"]
   }
 
 }
@@ -52,7 +52,7 @@ data "aws_ami" "worker_ami" {
 resource "aws_launch_template" "this" {
   name = "lt-${replace(random_pet.name.id, "-", "")}"
   image_id = data.aws_ami.worker_ami.id
-  instance_type = "t4g.micro"
+  instance_type = data.aws_ami.worker_ami.architecture == "x86_64" ? "t2.medium" : "t4g.medium"
   vpc_security_group_ids = [module.aws_network.allow_ssh_sg_id]
   key_name = aws_key_pair.deployer.key_name
   user_data = filebase64("${path.module}/scripts/startup.sh")
