@@ -2,7 +2,7 @@
 
 touch /test
 yum update -y
-yum install -y docker
+yum install -y docker vim nmap tcpdump
 service docker start
 usermod -a -G docker ec2-user
 
